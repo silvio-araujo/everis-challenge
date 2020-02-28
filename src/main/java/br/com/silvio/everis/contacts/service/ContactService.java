@@ -13,4 +13,10 @@ public interface ContactService {
 	public Contact loadContactById(Long contactId);
 	public Address loadAddressById(Long addressId);
 	public Phone loadPhoneById(Long phoneId);
+	public Contact addContact(Contact contact);
+	public Address addAddress(Address address);
+	public Phone addPhone(Phone phone);
+	public Contact updateContact(Contact contact);
+	public Address updateAddress(Address address);
+	public Phone updatePhone(Phone phone);
 }

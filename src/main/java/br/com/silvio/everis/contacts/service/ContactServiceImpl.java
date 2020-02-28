@@ -61,4 +61,34 @@ public class ContactServiceImpl implements ContactService {
 		Optional<Phone> oPhone = phoneDao.findById(phoneId);
 		return oPhone.isPresent() ? oPhone.get() : null;
 	}
+
+	@Override
+	public Contact addContact(Contact contact) {
+		return contactDao.save(contact);
+	}
+
+	@Override
+	public Address addAddress(Address address) {
+		return addressDao.save(address);
+	}
+
+	@Override
+	public Phone addPhone(Phone phone) {
+		return phoneDao.save(phone);
+	}
+
+	@Override
+	public Contact updateContact(Contact contact) {
+		return contactDao.save(contact);
+	}
+
+	@Override
+	public Address updateAddress(Address address) {
+		return addressDao.save(address);
+	}
+
+	@Override
+	public Phone updatePhone(Phone phone) {
+		return phoneDao.save(phone);
+	}
 }

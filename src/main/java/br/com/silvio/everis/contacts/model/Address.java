@@ -13,6 +13,8 @@ import javax.persistence.Table;
 
 import org.springframework.hateoas.RepresentationModel;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import br.com.silvio.everis.contacts.common.AddressType;
 import br.com.silvio.everis.contacts.common.StreetType;
 
@@ -27,6 +29,7 @@ public class Address extends RepresentationModel<Address> {
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="owner", nullable = false, updatable = true, insertable = true)
+	@JsonIgnore
 	private Contact contact;
 	
 	@Column
@@ -59,6 +62,14 @@ public class Address extends RepresentationModel<Address> {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public Contact getContact() {
+		return contact;
+	}
+
+	public void setContact(Contact contact) {
+		this.contact = contact;
 	}
 
 	public AddressType getAddressType() {

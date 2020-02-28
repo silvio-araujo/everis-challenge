@@ -13,6 +13,8 @@ import javax.persistence.Table;
 
 import org.springframework.hateoas.RepresentationModel;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import br.com.silvio.everis.contacts.common.PhoneType;
 
 @Entity
@@ -26,6 +28,7 @@ public class Phone extends RepresentationModel<Phone> {
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="owner", nullable = false, updatable = true, insertable = true)
+	@JsonIgnore
 	private Contact contact;
 	
 	@Column
@@ -51,6 +54,14 @@ public class Phone extends RepresentationModel<Phone> {
 		this.id = id;
 	}
 	
+	public Contact getContact() {
+		return contact;
+	}
+
+	public void setContact(Contact contact) {
+		this.contact = contact;
+	}
+
 	public PhoneType getPhoneType() {
 		return phoneType;
 	}
