@@ -15,8 +15,14 @@ import org.springframework.hateoas.RepresentationModel;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import br.com.silvio.everis.contacts.common.PhoneType;
+import br.com.silvio.everis.contacts.enums.PhoneType;
 
+/**
+ * Phone class.
+ * 
+ * @author silvio.araujo
+ *
+ */
 @Entity
 @Table(name="PHONE")
 public class Phone extends RepresentationModel<Phone> {
@@ -46,58 +52,128 @@ public class Phone extends RepresentationModel<Phone> {
 	@Column
 	private String extension;
 	
+	/**
+	 * Gets phone ID.
+	 * 
+	 * @return	the phone ID.
+	 */
 	public Long getId() {
 		return id;
 	}
 
+	/**
+	 * Sets phone ID.
+	 * 
+	 * @param id	the phone ID.
+	 */
 	public void setId(Long id) {
 		this.id = id;
 	}
 	
+	/**
+	 * Gets the contact owner of this phone.
+	 * 
+	 * @return	the contact owner.
+	 */
 	public Contact getContact() {
 		return contact;
 	}
 
+	/**
+	 * Sets the contact owner of this phone.
+	 * 
+	 * @param contact	the contact owner.
+	 */
 	public void setContact(Contact contact) {
 		this.contact = contact;
 	}
 
+	/**
+	 * Gets the phone type.
+	 * 
+	 * @return	the phone type.
+	 */
 	public PhoneType getPhoneType() {
 		return phoneType;
 	}
 	
+	/**
+	 * Sets the phone type.
+	 * 
+	 * @param phoneType	the phone type.
+	 */
 	public void setPhoneType(PhoneType phoneType) {
 		this.phoneType = phoneType;
 	}
 	
+	/**
+	 * Gets the phone DDI.
+	 * 
+	 * @return	the phone DDI.
+	 */
 	public String getDdi() {
 		return ddi;
 	}
 	
+	/**
+	 * Sets the phone DDI.
+	 * 
+	 * @param ddi	the phone DDI.
+	 */
 	public void setDdi(String ddi) {
 		this.ddi = ddi;
 	}
 	
+	/**
+	 * Gets the phone DDD.
+	 * 
+	 * @return	the phone DDD.
+	 */
 	public String getDdd() {
 		return ddd;
 	}
 	
+	/**
+	 * Sets the phone DDD.
+	 * 
+	 * @param ddd	the phone DDD.
+	 */
 	public void setDdd(String ddd) {
 		this.ddd = ddd;
 	}
 	
+	/**
+	 * Gets the phone number.
+	 * 
+	 * @return	the phone number.
+	 */
 	public String getNumber() {
 		return number;
 	}
 	
+	/**
+	 * Sets the phone number.
+	 * 
+	 * @param number	the phone number.
+	 */
 	public void setNumber(String number) {
 		this.number = number;
 	}
 	
+	/**
+	 * Gets the phone extension.
+	 * 
+	 * @return	the phone extension.
+	 */
 	public String getExtension() {
 		return extension;
 	}
 	
+	/**
+	 * Sets the phone extension.
+	 * 
+	 * @param extension	the phone extension.
+	 */
 	public void setExtension(String extension) {
 		this.extension = extension;
 	}

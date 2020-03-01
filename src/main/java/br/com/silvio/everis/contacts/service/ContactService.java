@@ -18,5 +18,12 @@ public interface ContactService {
 	public Phone addPhone(Phone phone);
 	public Contact updateContact(Contact contact);
 	public Address updateAddress(Address address);
+	public Address updateAddress(Long contactId, Address address);
 	public Phone updatePhone(Phone phone);
+	public Phone updatePhone(Long contactId, Phone phone);
+	public void deleteContact(Long contactId);
+	public void deleteAddress(Long addressId);
+	public void deleteAddress(Long contactId, Long addressId);
+	public void deletePhone(Long phoneId);
+	public void deletePhone(Long contactId, Long phoneId);
 }

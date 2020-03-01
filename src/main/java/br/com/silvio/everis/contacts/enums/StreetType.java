@@ -1,4 +1,4 @@
-package br.com.silvio.everis.contacts.common;
+package br.com.silvio.everis.contacts.enums;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 
@@ -58,43 +58,43 @@ public enum StreetType {
 	DSV("Desvio"),
 	DT("Distrito"),
 	EB("Entre Bloco"),
-//	EIM	Estrada Intermunicipal
-//	ENS	Enseada
-//	ENT	Entrada Particular
-//	EQ	Entre Quadra
-//	ESC	Escada
-//	ESD	Escadaria
-//	ESE	Estrada Estadual
-//	ESI	Estrada Vicinal
-//	ESL	Estrada de Ligação
-//	ESM	Estrada Municipal
-//	ESP	Esplanada
-//	ESS	Estrada de Servidão
-//	EST	Estrada
-//	ESV	Estrada Velha
-//	ETA	Estrada Antiga
-//	ETC	Estação
-//	ETD	Estádio
-//	ETN	Estância
-//	ETP	Estrada Particular
-//	ETT	Estacionamento
-//	EVA	Evangélica
-//	EVD	Elevada
-//	EX	Eixo Industrial
-//	FAV	Favela
-//	FAZ	Fazenda
-//	FER	Ferrovia
-//	FNT	Fonte
-//	FRA	Feira
-//	FTE	Forte
-//	GAL	Galeria
-//	GJA	Granja
-//	HAB	Núcleo Habitacional
-//	IA	Ilha
-//	IND	Indeterminado
-//	IOA	Ilhota
-//	JD	Jardim
-//	JDE	Jardinete
+	EIM("Estrada Intermunicipal"),
+	ENS("Enseada"),
+	ENT("Entrada Particular"),
+	EQ("Entre Quadra"),
+	ESC("Escada"),
+	ESD("Escadaria"),
+	ESE("Estrada Estadual"),
+	ESI("Estrada Vicinal"),
+	ESL("Estrada de Ligação"),
+	ESM("Estrada Municipal"),
+	ESP("Esplanada"),
+	ESS("Estrada de Servidão"),
+	EST("Estrada"),
+	ESV("Estrada Velha"),
+	ETA("Estrada Antiga"),
+	ETC("Estação"),
+	ETD("Estádio"),
+	ETN("Estância"),
+	ETP("Estrada Particular"),
+	ETT("Estacionamento"),
+	EVA("Evangélica"),
+	EVD("Elevada"),
+	EX("Eixo Industrial"),
+	FAV("Favela"),
+	FAZ("Fazenda"),
+	FER("Ferrovia"),
+	FNT("Fonte"),
+	FRA("Feira"),
+	FTE("Forte"),
+	GAL("Galeria"),
+	GJA("Granja"),
+	HAB("Núcleo Habitacional"),
+	IA("Ilha"),
+	IND("Indeterminado"),
+	IOA("Ilhota"),
+	JD("Jardim"),
+	JDE("Jardinete"),
 //	LD	Ladeira
 //	LGA	Lagoa
 //	LGO	Lago

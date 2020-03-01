@@ -19,6 +19,12 @@ import org.springframework.hateoas.RepresentationModel;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+/**
+ * Contact class.
+ * 
+ * @author silvio.araujo
+ *
+ */
 @Entity
 @Table(name="CONTACT")
 public class Contact extends RepresentationModel<Contact> {
@@ -45,60 +51,131 @@ public class Contact extends RepresentationModel<Contact> {
 	@OneToMany(mappedBy="contact", targetEntity=Phone.class, fetch=FetchType.LAZY, cascade=CascadeType.ALL)
 	private List<Phone> phones;
 	
+	/**
+	 * Gets the contact ID field.
+	 * 
+	 * @return ID	the ID field.
+	 */
 	public Long getId() {
 		return id;
 	}
 	
+	/**
+	 * Sets the contact ID field.
+	 * 
+	 * @param id	the ID field.
+	 */
 	public void setId(Long id) {
 		this.id = id;
 	}
 	
+	/**
+	 * Gets the contact name.
+	 * 
+	 * @return	the contact name.
+	 */
 	public String getName() {
 		return name;
 	}
 	
+	/**
+	 * Sets the contact name.
+	 * 
+	 * @param name
+	 */
 	public void setName(String name) {
 		this.name = name;
 	}
 	
+	/**
+	 * Gets the contact birth date.
+	 * @return	the birth date.
+	 */
 	public Date getBirthdate() {
 		return birthdate;
 	}
 	
+	/**
+	 * Sets the contact birth date.
+	 * 
+	 * @param birthdate	the birth date.
+	 */
 	public void setBirthdate(Date birthdate) {
 		this.birthdate = birthdate;
 	}
 	
+	/**
+	 * Gets the contact CPF.
+	 * 
+	 * @return	the CPF.
+	 */
 	public String getCpf() {
 		return cpf;
 	}
 	
+	/**
+	 * Sets the contact CPF.
+	 * 
+	 * @param cpf	the CPF.
+	 */
 	public void setCpf(String cpf) {
 		this.cpf = cpf;
 	}
 	
+	/**
+	 * Gets the contact addresses.
+	 * 
+	 * @return	a list of addresses of the contact.
+	 */
 	public List<Address> getAddresses() {
 		return addresses;
 	}
 	
+	/**
+	 * Sets the contact addresses.
+	 * 
+	 * @param addresses	a list of addresses of the contact.
+	 */
 	public void setAddresses(List<Address> addresses) {
 		this.addresses = addresses;
 	}
 	
+	/**
+	 * Gets the contact phones.
+	 * 
+	 * @return	a list of phones of the contact.
+	 */
 	public List<Phone> getPhones() {
 		return phones;
 	}
 	
+	/**
+	 * Sets the contact phones.
+	 * 
+	 * @param phones	a list of phones of the contact.
+	 */
 	public void setPhones(List<Phone> phones) {
 		this.phones = phones;
 	}
 
+	/**
+	 * Converts all data in this class to a string.
+	 * 
+	 * @return	all data in this class in a string.
+	 */
 	@Override
 	public String toString() {
-		return "Contact [name=" + name + ", birthdate=" + birthdate + ", cpf=" + cpf + ", addresses=" + addresses
+		return "Contact [name=" + name + ", birthdate=" + 
+				String.format("%tF", birthdate) +
+				", cpf=" + cpf + ", addresses=" + addresses
 				+ ", phones=" + phones + "]";
 	}
 
+	/**
+	 * Calculates the hash code of this class.
+	 * 
+	 * @return	the hash code of this class.
+	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -112,6 +189,12 @@ public class Contact extends RepresentationModel<Contact> {
 		return result;
 	}
 
+	/**
+	 * Compare this class with another equivalent one.
+	 * 
+	 * @param obj	other object to compare to this one.
+	 * @return	true if objects are equal, false if not.
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)

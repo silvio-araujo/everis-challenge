@@ -1,4 +1,4 @@
-package br.com.silvio.everis.contacts.common;
+package br.com.silvio.everis.contacts.enums;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 
