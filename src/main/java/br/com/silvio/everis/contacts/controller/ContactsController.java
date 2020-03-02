@@ -108,7 +108,9 @@ public class ContactsController {
 //				fillContactLinks(contact);
 //			}
 	
-			contacts.forEach(contact -> fillContactLinks(contact));
+//			contacts.forEach(contact -> fillContactLinks(contact));
+			
+			contacts.forEach(this::fillContactLinks);
 			
 			Link link = linkTo(ContactsController.class).withSelfRel();
 			var collectionModel = new CollectionModel<Contact>(contacts, link);

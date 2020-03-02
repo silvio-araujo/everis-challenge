@@ -34,6 +34,9 @@ public class ContactServiceImpl implements ContactService {
 	@Autowired
 	PhoneDao phoneDao;
 	
+	final String msgAddressNotSupplied = "address record was not supplied";
+	final String msgPhoneNotSupplied = "phone record was not supplied";
+	
 	/**
 	 * Validates contact record against rules (REGEX).
 	 * 
@@ -52,10 +55,8 @@ public class ContactServiceImpl implements ContactService {
 			throw new InvalidInputException("contact name is mandatory");
 		}
 		
-		if (cpf != null) {
-			if (!cpf.matches("[0-9]{11}")) {
-				throw new InvalidInputException("contact CPF is invalid");
-			}
+		if ((cpf != null) && (!cpf.matches("[0-9]{11}"))) {
+			throw new InvalidInputException("contact CPF is invalid");
 		}
 	}
 	
@@ -78,10 +79,8 @@ public class ContactServiceImpl implements ContactService {
 			throw new InvalidInputException("address city is mandatory");
 		}
 		
-		if (zipCode != null) {
-			if (!zipCode.matches("\\d{5}-\\d{3}")) {
+		if ((zipCode != null) && (!zipCode.matches("\\d{5}-\\d{3}"))) {
 				throw new InvalidInputException("address zip code is invalid");
-			}
 		}
 	}
 	
@@ -255,7 +254,7 @@ public class ContactServiceImpl implements ContactService {
 				throw new InvalidInputException("address ID must not be supplied for new records");
 			}
 		} else {
-			throw new InvalidInputException("address record was not supplied");
+			throw new InvalidInputException(msgAddressNotSupplied);
 		}
 	}
 
@@ -276,7 +275,7 @@ public class ContactServiceImpl implements ContactService {
 				throw new InvalidInputException("phone ID must not be supplied for new records");
 			}
 		} else {
-			throw new InvalidInputException("phone record was not supplied");
+			throw new InvalidInputException(msgPhoneNotSupplied);
 		}
 	}
 
@@ -324,7 +323,7 @@ public class ContactServiceImpl implements ContactService {
 				throw new ResourceNotFoundException(Address.class, address.getId());
 			}
 		} else {
-			throw new InvalidInputException("address record was not supplied");
+			throw new InvalidInputException(msgAddressNotSupplied);
 		}
 	}
 
@@ -359,7 +358,7 @@ public class ContactServiceImpl implements ContactService {
 				throw new ResourceNotFoundException(Contact.class, contactId);
 			}
 		} else {
-			throw new InvalidInputException("address record was not supplied");
+			throw new InvalidInputException(msgAddressNotSupplied);
 		}
 	}
 
@@ -383,7 +382,7 @@ public class ContactServiceImpl implements ContactService {
 				throw new ResourceNotFoundException(Phone.class, phone.getId());
 			}
 		} else {
-			throw new InvalidInputException("phone record was not supplied");
+			throw new InvalidInputException(msgPhoneNotSupplied);
 		}
 	}
 
@@ -418,7 +417,7 @@ public class ContactServiceImpl implements ContactService {
 				throw new ResourceNotFoundException(Contact.class, contactId);
 			}
 		} else {
-			throw new InvalidInputException("phone record was not supplied");
+			throw new InvalidInputException(msgPhoneNotSupplied);
 		}
 	}
 
