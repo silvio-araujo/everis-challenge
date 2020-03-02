@@ -271,7 +271,7 @@ public class ContactsController {
 
 					return ResponseEntity.ok(entityModel);
 				} else {
-					throw new InvalidInputException();
+					throw new InvalidInputException("supplied address ID does not belong to supplied contact ID");
 				}
 			} else {
 				throw new ResourceNotFoundException(Address.class, addressId);

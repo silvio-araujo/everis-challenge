@@ -93,7 +93,7 @@ public class ContactServiceImpl implements ContactService {
 			Optional<Contact> oContact = contactDao.findById(contactId);
 			return oContact.isPresent() ? oContact.get() : null;
 		} else {
-			throw new InvalidInputException();
+			throw new InvalidInputException("null contact ID");
 		}
 	}
 
@@ -112,7 +112,7 @@ public class ContactServiceImpl implements ContactService {
 			Optional<Address> oAddress = addressDao.findById(addressId);
 			return oAddress.isPresent() ? oAddress.get() : null;
 		} else {
-			throw new InvalidInputException();
+			throw new InvalidInputException("null address ID");
 		}
 	}
 
@@ -131,7 +131,7 @@ public class ContactServiceImpl implements ContactService {
 			Optional<Phone> oPhone = phoneDao.findById(phoneId);
 			return oPhone.isPresent() ? oPhone.get() : null;
 		} else {
-			throw new InvalidInputException();
+			throw new InvalidInputException("null phone ID");
 		}
 	}
 
@@ -146,10 +146,14 @@ public class ContactServiceImpl implements ContactService {
 	 */
 	@Override
 	public Contact addContact(Contact contact) {
-		if ((contact != null) && (contact.getId() == null)) {
-			return contactDao.save(contact);
+		if (contact != null) {
+			if (contact.getId() == null) {
+				return contactDao.save(contact);
+			} else {
+				throw new InvalidInputException("contact ID must not be supplied for new records");
+			}
 		} else {
-			throw new InvalidInputException();
+			throw new InvalidInputException("contact record was not supplied");
 		}
 	}
 
@@ -164,10 +168,14 @@ public class ContactServiceImpl implements ContactService {
 	 */
 	@Override
 	public Address addAddress(Address address) {
-		if ((address != null) && (address.getId() == null)) {
-			return addressDao.save(address);
+		if (address != null) {
+			if (address.getId() == null) {
+				return addressDao.save(address);
+			} else {
+				throw new InvalidInputException("address ID must not be supplied for new records");
+			}
 		} else {
-			throw new InvalidInputException();
+			throw new InvalidInputException("address record was not supplied");
 		}
 	}
 
@@ -182,10 +190,14 @@ public class ContactServiceImpl implements ContactService {
 	 */
 	@Override
 	public Phone addPhone(Phone phone) {
-		if ((phone != null) && (phone.getId() == null)) {
-			return phoneDao.save(phone);
+		if (phone != null) {
+			if (phone.getId() == null) {
+				return phoneDao.save(phone);
+			} else {
+				throw new InvalidInputException("phone ID must not be supplied for new records");
+			}
 		} else {
-			throw new InvalidInputException();
+			throw new InvalidInputException("phone record was not supplied");
 		}
 	}
 
@@ -210,7 +222,7 @@ public class ContactServiceImpl implements ContactService {
 				throw new ResourceNotFoundException(Contact.class, contact.getId());
 			}
 		} else {
-			throw new InvalidInputException();
+			throw new InvalidInputException("contact record was not supplied");
 		}
 	}
 
@@ -233,7 +245,7 @@ public class ContactServiceImpl implements ContactService {
 				throw new ResourceNotFoundException(Address.class, address.getId());
 			}
 		} else {
-			throw new InvalidInputException();
+			throw new InvalidInputException("address record was not supplied");
 		}
 	}
 
@@ -258,7 +270,7 @@ public class ContactServiceImpl implements ContactService {
 					if (oldAddress.getContact().getId().equals(contactId)) {
 						return addressDao.save(address);
 					} else {
-						throw new InvalidInputException();
+						throw new InvalidInputException("supplied address does not belong to supplied contact ID");
 					}
 				} else {
 					throw new ResourceNotFoundException(Address.class, address.getId());
@@ -267,7 +279,7 @@ public class ContactServiceImpl implements ContactService {
 				throw new ResourceNotFoundException(Contact.class, contactId);
 			}
 		} else {
-			throw new InvalidInputException();
+			throw new InvalidInputException("address record was not supplied");
 		}
 	}
 
@@ -292,7 +304,7 @@ public class ContactServiceImpl implements ContactService {
 				throw new ResourceNotFoundException(Phone.class, phone.getId());
 			}
 		} else {
-			throw new InvalidInputException();
+			throw new InvalidInputException("phone record was not supplied");
 		}
 	}
 
@@ -317,7 +329,7 @@ public class ContactServiceImpl implements ContactService {
 					if (oldPhone.getContact().getId().equals(contactId)) {
 						return phoneDao.save(phone);
 					} else {
-						throw new InvalidInputException();
+						throw new InvalidInputException("supplied phone does not belong to supplied contact ID");
 					}
 				} else {
 					throw new ResourceNotFoundException(Phone.class, phone.getId());
@@ -326,7 +338,7 @@ public class ContactServiceImpl implements ContactService {
 				throw new ResourceNotFoundException(Contact.class, contactId);
 			}
 		} else {
-			throw new InvalidInputException();
+			throw new InvalidInputException("phone record was not supplied");
 		}
 	}
 
@@ -385,7 +397,7 @@ public class ContactServiceImpl implements ContactService {
 				if (address.getContact().getId().equals(contactId)) {
 					addressDao.deleteById(addressId);
 				} else {
-					throw new InvalidInputException();
+					throw new InvalidInputException("supplied address ID does not belong to supplied contact ID");
 				}
 			} else {
 				throw new ResourceNotFoundException(Address.class, addressId);
@@ -432,7 +444,7 @@ public class ContactServiceImpl implements ContactService {
 				if (phone.getContact().getId().equals(phoneId)) {
 					phoneDao.deleteById(phoneId);
 				} else {
-					throw new InvalidInputException();
+					throw new InvalidInputException("supplied phone ID does not belong to supplied contact ID");
 				}
 			} else {
 				throw new ResourceNotFoundException(Phone.class, phoneId);

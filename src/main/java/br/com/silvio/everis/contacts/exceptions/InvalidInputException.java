@@ -19,7 +19,7 @@ public class InvalidInputException extends RuntimeException {
 	/**
 	 * Class constructor.
 	 */
-	public InvalidInputException() {
-		super("Invalid input");
+	public InvalidInputException(String whatsWrong) {
+		super(String.format("Invalid input: %s", whatsWrong));
 	}
 }
