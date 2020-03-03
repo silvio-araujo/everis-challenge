@@ -34,8 +34,8 @@ public class ContactServiceImpl implements ContactService {
 	@Autowired
 	PhoneDao phoneDao;
 	
-	final String msgAddressNotSupplied = "address record was not supplied";
-	final String msgPhoneNotSupplied = "phone record was not supplied";
+	static final String msgAddressNotSupplied = "address record was not supplied";
+	static final String msgPhoneNotSupplied = "phone record was not supplied";
 	
 	/**
 	 * Validates contact record against rules (REGEX).

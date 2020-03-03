@@ -3,8 +3,6 @@ package br.com.silvio.everis.contacts.enums;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum StreetType {
-	STREET("Rua"), AVENUE("Avenida"), ROAD("Estrada"),
-	
 	A("Área"),
 	AC("Acesso"),
 	ACA("Acampamento"),
@@ -95,94 +93,93 @@ public enum StreetType {
 	IOA("Ilhota"),
 	JD("Jardim"),
 	JDE("Jardinete"),
-//	LD	Ladeira
-//	LGA	Lagoa
-//	LGO	Lago
-//	LOT	Loteamento
-//	LRG	Largo
-//	LT	Lote
-//	MER	Mercado
-//	MNA	Marina
-//	MOD	Modulo
-//	MRG	Projeção
-//	MRO	Morro
-//	MTE	Monte
-//	NUC	Núcleo
-//	NUR	Núcleo Rural
-//	OUT	Outeiro
-//	PAR	Paralela
-//	PAS	Passeio
-//	PAT	Pátio
-//	PC	Praça
-//	PCE	Praça de Esportes
-//	PDA	Parada
-//	PDO	Paradouro
-//	PNT	Ponta
-//	PR	Praia
-//	PRL	Prolongamento
-//	PRM	Parque Municipal
-//	PRQ	Parque
-//	PRR	Parque Residencial
-//	PSA	Passarela
-//	PSG	Passagem
-//	PSP	Passagem de Pedestre
-//	PSS	Passagem Subterrânea
-//	PTE	Ponte
-//	PTO	Porto
-//	Q	Quadra
-//	QTA	Quinta
-//	QTS	Quintas
-//	R	Rua
-//	R I	Rua Integração
-//	R L	Rua de Ligação
-//	R P	Rua Particular
-//	R V	Rua Velha
-//	RAM	Ramal
-//	RCR	Recreio
-//	REC	Recanto
-//	RER	Retiro
-//	RES	Residencial
-//	RET	Reta
-//	RLA	Ruela
-//	RMP	Rampa
-//	ROA	Rodo Anel
-//	ROD	Rodovia
-//	ROT	Rotula
-//	RPE	Rua de Pedestre
-//	RPR	Margem
-//	RTN	Retorno
-//	RTT	Rotatória
-//	SEG	Segunda Avenida
-//	SIT	Sitio
-//	SRV	Servidão
-//	ST	Setor
-//	SUB	Subida
-//	TCH	Trincheira
-//	TER	Terminal
-//	TR	Trecho
-//	TRV	Trevo
-//	TUN	Túnel
-//	TV	Travessa
-//	TVP	Travessa Particular
-//	TVV	Travessa Velha
-//	UNI	Unidade
-//	V	Via
-//	V C	Via Coletora
-//	V L	Via Local
-//	VAC	Via de Acesso
-//	VAL	Vala
-//	VCO	Via Costeira
-//	VD	Viaduto
-//	V-E	Via Expressa
-//	VER	Vereda
-//	VEV	Via Elevado
-//	VL	Vila
-//	VLA	Viela
-//	VLE	Vale
-//	VLT	Via Litorânea
-//	VPE	Via de Pedestre
-//	VRT	Variante
-	
+	LD("Ladeira"),
+	LGA("Lagoa"),
+	LGO("Lago"),
+	LOT("Loteamento"),
+	LRG("Largo"),
+	LT("Lote"),
+	MER("Mercado"),
+	MNA("Marina"),
+	MOD("Módulo"),
+	MRG("Projeção"),
+	MRO("Morro"),
+	MTE("Monte"),
+	NUC("Núcleo"),
+	NUR("Núcleo Rural"),
+	OUT("Outeiro"),
+	PAR("Paralela"),
+	PAS("Passeio"),
+	PAT("Pátio"),
+	PC("Praça"),
+	PCE("Praça de Esportes"),
+	PDA("Parada"),
+	PDO("Paradouro"),
+	PNT("Ponta"),
+	PR("Praia"),
+	PRL("Prolongamento"),
+	PRM("Parque Municipal"),
+	PRQ("Parque"),
+	PRR("Parque Residencial"),
+	PSA("Passarela"),
+	PSG("Passagem"),
+	PSP("Passagem de Pedestre"),
+	PSS("Passagem Subterrânea"),
+	PTE("Ponte"),
+	PTO("Porto"),
+	Q("Quadra"),
+	QTA("Quinta"),
+	QTS("Quintas"),
+	R("Rua"),
+	R_I("Rua Integração"),
+	R_L("Rua de Ligação"),
+	R_P("Rua Particular"),
+	R_V("Rua Velha"),
+	RAM("Ramal"),
+	RCR("Recreio"),
+	REC("Recanto"),
+	RER("Retiro"),
+	RES("Residencial"),
+	RET("Reta"),
+	RLA("Ruela"),
+	RMP("Rampa"),
+	ROA("Rodo Anel"),
+	ROD("Rodovia"),
+	ROT("Rótula"),
+	RPE("Rua de Pedestre"),
+	RPR("Margem"),
+	RTN("Retorno"),
+	RTT("Rotatória"),
+	SEG("Segunda Avenida"),
+	SIT("Sítio"),
+	SRV("Servidão"),
+	ST("Setor"),
+	SUB("Subida"),
+	TCH("Trincheira"),
+	TER("Terminal"),
+	TR("Trecho"),
+	TRV("Trevo"),
+	TUN("Túnel"),
+	TV("Travessa"),
+	TVP("Travessa Particular"),
+	TVV("Travessa Velha"),
+	UNI("Unidade"),
+	V("Via"),
+	V_C("Via Coletora"),
+	V_L("Via Local"),
+	VAC("Via de Acesso"),
+	VAL("Vala"),
+	VCO("Via Costeira"),
+	VD("Viaduto"),
+	V_E("Via Expressa"),
+	VER("Vereda"),
+	VEV("Via Elevado"),
+	VL("Vila"),
+	VLA("Viela"),
+	VLE("Vale"),
+	VLT("Via Litorânea"),
+	VPE("Via de Pedestre"),
+	VRT("Variante"),
 	ZIG("Zigue-Zague");
 	
 	private String description;
