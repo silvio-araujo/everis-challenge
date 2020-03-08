@@ -18,8 +18,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.silvio.everis.contacts.exceptions.InvalidInputException;
-import br.com.silvio.everis.contacts.exceptions.ResourceNotFoundException;
+import br.com.silvio.everis.contacts.exceptions.ResourceNotFound;
+import br.com.silvio.everis.contacts.exceptions.SuppliedDoesNotBelongTo;
 import br.com.silvio.everis.contacts.model.Address;
 import br.com.silvio.everis.contacts.model.Contact;
 import br.com.silvio.everis.contacts.model.Phone;
@@ -47,7 +47,7 @@ public class ContactsController {
 	 * 
 	 * @param contact	the contact to be filled
 	 */
-	private RuntimeException treatException(String methodName, RuntimeException e) {
+	private RuntimeException treatRTE(String methodName, RuntimeException e) {
 		logger.error(String.format("%s fails: %s", methodName, e.getMessage()));
 		return e;
 	}
@@ -92,6 +92,7 @@ public class ContactsController {
 	 * URL (GET): http://localhost:8080/contacts
 	 * 
 	 * @return	the response, filled with the collection model of contacts.
+	 * @throws	treatRTE.
 	 */
 	@GetMapping(value="",
 				produces={"application/hal+json"})
@@ -114,7 +115,7 @@ public class ContactsController {
 			
 			return ResponseEntity.ok(collectionModel);
 		} catch (RuntimeException e) {
-			throw treatException(methodName, e);
+			throw treatRTE(methodName, e);
 		}
 	}
 	
@@ -124,7 +125,7 @@ public class ContactsController {
 	 * URL (GET): http://localhost:8080/contacts/{contactId}/addresses
 	 * 
 	 * @return	the response, filled with the collection model of contacts.
-	 * @throws ResourceNotFoundException, InvalidInputException 
+	 * @throws	treatRTE.
 	 */
 	@GetMapping(value="/{contactId}/addresses",
 				produces={"application/hal+json"})
@@ -153,7 +154,7 @@ public class ContactsController {
 			
 			return ResponseEntity.ok(collectionModel);
 		} catch (RuntimeException e) {
-			throw treatException(methodName, e);
+			throw treatRTE(methodName, e);
 		}
 	}
 
@@ -163,12 +164,12 @@ public class ContactsController {
 	 * URL (GET): http://localhost:8080/contacts/{contactId}/phones
 	 * 
 	 * @return	the response, filled with the collection model of phones.
-	 * @throws ResourceNotFoundException, InvalidInputException 
+	 * @throws treatRTE.
 	 */
 	@GetMapping(value="/{contactId}/phones",
 				produces={"application/hal+json"})
 	public ResponseEntity<CollectionModel<Phone>> getPhonesForContact(
-							@PathVariable final Long contactId) throws ResourceNotFoundException, InvalidInputException {
+							@PathVariable final Long contactId) {
 		final var methodName = new Object() {}
 	      .getClass()
 	      .getEnclosingMethod()
@@ -192,7 +193,7 @@ public class ContactsController {
 
 			return ResponseEntity.ok(collectionModel);
 		} catch (RuntimeException e) {
-			throw treatException(methodName, e);
+			throw treatRTE(methodName, e);
 		}
 	}
 
@@ -202,11 +203,12 @@ public class ContactsController {
 	 * URL (GET): http://localhost:8080/contacts/{contactId}
 	 * 
 	 * @return	the response, filled with the collection model of phones.
+	 * @throws	treatRTE.
 	 */
 	@GetMapping(value="/{contactId}",
 				produces={"application/hal+json"})
 	public ResponseEntity<EntityModel<Contact>> getContactById(
-								@PathVariable final Long contactId) throws ResourceNotFoundException, InvalidInputException {
+								@PathVariable final Long contactId)  {
 		final var methodName = new Object() {}
 	      .getClass()
 	      .getEnclosingMethod()
@@ -226,10 +228,10 @@ public class ContactsController {
 
 				return ResponseEntity.ok(entityModel);
 			} else {
-				throw new ResourceNotFoundException(Contact.class, contactId);
+				throw new ResourceNotFound(Contact.class, contactId);
 			}
 		} catch (RuntimeException e) {
-			throw treatException(methodName, e);
+			throw treatRTE(methodName, e);
 		}
 	}
 	
@@ -242,13 +244,13 @@ public class ContactsController {
 	 * @param addressId	the address ID.
 	 * 
 	 * @return	the response, filled with the entity model of address.
-	 * @throws ResourceNotFoundException, InvalidInputException 
+	 * @throws	treatRTE.
 	 */
 	@GetMapping(value="/{contactId}/address/{addressId}",
 				produces={"application/hal+json"})
 	public ResponseEntity<EntityModel<Address>> getAddressById(
 								@PathVariable final Long contactId,
-								@PathVariable final Long addressId) throws ResourceNotFoundException, InvalidInputException {
+								@PathVariable final Long addressId) {
 		final var methodName = new Object() {}
 	      .getClass()
 	      .getEnclosingMethod()
@@ -267,13 +269,13 @@ public class ContactsController {
 
 					return ResponseEntity.ok(entityModel);
 				} else {
-					throw new InvalidInputException("supplied address ID does not belong to supplied contact ID");
+					throw new SuppliedDoesNotBelongTo("address ID", "contact ID");
 				}
 			} else {
-				throw new ResourceNotFoundException(Address.class, addressId);
+				throw new ResourceNotFound(Address.class, addressId);
 			}
 		} catch (RuntimeException e) {
-			throw treatException(methodName, e);
+			throw treatRTE(methodName, e);
 		}
 	}
 
@@ -286,13 +288,13 @@ public class ContactsController {
 	 * @param phoneId	the phone ID.
 	 * 
 	 * @return	the response, filled with the entity model of phone.
-	 * @throws ResourceNotFoundException, InvalidInputException 
+	 * @throws	treatRTE.
 	 */
 	@GetMapping(value="/{contactId}/phone/{phoneId}",
 				produces={"application/hal+json"})
 	public ResponseEntity<EntityModel<Phone>> getPhoneById(
 								@PathVariable final Long contactId,
-								@PathVariable final Long phoneId) throws ResourceNotFoundException, InvalidInputException {
+								@PathVariable final Long phoneId) {
 	    final var methodName = new Object() {}
 	      .getClass()
 	      .getEnclosingMethod()
@@ -310,10 +312,10 @@ public class ContactsController {
 
 				return ResponseEntity.ok(entityModel);
 			} else {
-				throw new ResourceNotFoundException(Phone.class, phoneId);
+				throw new ResourceNotFound(Phone.class, phoneId);
 			}
 		} catch (RuntimeException e) {
-			throw treatException(methodName, e);
+			throw treatRTE(methodName, e);
 		}
 	}
 	
@@ -324,13 +326,13 @@ public class ContactsController {
 	 * 
 	 * @param contact	the new contact.
 	 * @return	the response, filled with the entity model of contact.
-	 * @throws ResourceNotFoundException, InvalidInputException 
+	 * @throws	treatRTE.
 	 */
 	@PostMapping(value="",
 				 consumes={"application/json"},
 				 produces={"application/hal+json"})
 	public ResponseEntity<EntityModel<Contact>> addContact(
-								@RequestBody final Contact contact) throws ResourceNotFoundException, InvalidInputException {
+								@RequestBody final Contact contact) {
 	    final var methodName = new Object() {}
 	      .getClass()
 	      .getEnclosingMethod()
@@ -347,7 +349,7 @@ public class ContactsController {
 
 			return ResponseEntity.ok(entityModel);
 		} catch (RuntimeException e) {
-			throw treatException(methodName, e);
+			throw treatRTE(methodName, e);
 		}
 	}
 	
@@ -359,14 +361,14 @@ public class ContactsController {
 	 * @param contactId	the contact ID for whom we want to add an address.
 	 * @param address	the address to be added.
 	 * @return	the response, filled with the entity model of address.
-	 * @throws ResourceNotFoundException, InvalidInputException 
+	 * @throws	treatRTE.
 	 */
 	@PostMapping(value="/{contactId}/address",
 				 consumes={"application/json"},
 				 produces={"application/hal+json"})
 	public ResponseEntity<EntityModel<Address>> addAddress(
 								@PathVariable final Long contactId,
-								@RequestBody final Address address) throws ResourceNotFoundException, InvalidInputException {
+								@RequestBody final Address address) {
 	    final var methodName = new Object() {}
 	      .getClass()
 	      .getEnclosingMethod()
@@ -391,7 +393,7 @@ public class ContactsController {
 				return ResponseEntity.notFound().build();
 			}
 		} catch (RuntimeException e) {
-			throw treatException(methodName, e);
+			throw treatRTE(methodName, e);
 		}
 	}
 
@@ -403,14 +405,14 @@ public class ContactsController {
 	 * @param contactId	the contact ID for whom we want to add a phone.
 	 * @param phone	the phone to be added.
 	 * @return	the response, filled with the entity model of phone.
-	 * @throws ResourceNotFoundException, InvalidInputException 
+	 * @throws	treatRTE.
 	 */
 	@PostMapping(value="/{contactId}/phone",
 				 consumes={"application/json"},
 				 produces={"application/hal+json"})
 	public ResponseEntity<EntityModel<Phone>> addPhone(
 								@PathVariable final Long contactId,
-								@RequestBody final Phone phone) throws ResourceNotFoundException, InvalidInputException {
+								@RequestBody final Phone phone) {
 	    final var methodName = new Object() {}
 	      .getClass()
 	      .getEnclosingMethod()
@@ -432,10 +434,10 @@ public class ContactsController {
 				
 				return ResponseEntity.ok(entityModel);
 			} else {
-				throw new ResourceNotFoundException(Contact.class, contactId);
+				throw new ResourceNotFound(Contact.class, contactId);
 			}
 		} catch (RuntimeException e) {
-			throw treatException(methodName, e);
+			throw treatRTE(methodName, e);
 		}
 	}
 
@@ -446,13 +448,13 @@ public class ContactsController {
 	 * 
 	 * @param contact	the contact to be updated.
 	 * @return	the response, filled with the entity model of contact.
-	 * @throws ResourceNotFoundException, InvalidInputException 
+	 * @throws	treatRTE.
 	 */
 	@PutMapping(value="",
 				consumes={"application/json"},
 				produces={"application/hal+json"})
 	public ResponseEntity<EntityModel<Contact>> updateContact(
-								@RequestBody final Contact contact) throws ResourceNotFoundException, InvalidInputException {
+								@RequestBody final Contact contact) {
 	    final var methodName = new Object() {}
 	      .getClass()
 	      .getEnclosingMethod()
@@ -469,7 +471,7 @@ public class ContactsController {
 			
 			return ResponseEntity.ok(entityModel);
 		} catch (RuntimeException e) {
-			throw treatException(methodName, e);
+			throw treatRTE(methodName, e);
 		}
 	}
 
@@ -481,14 +483,14 @@ public class ContactsController {
 	 * @param contactId	the contact ID of the owner of address.
 	 * @param address	the address to be updated.
 	 * @return	the response, filled with the entity model of address.
-	 * @throws ResourceNotFoundException, InvalidInputException 
+	 * @throws	treatRTE.
 	 */
 	@PutMapping(value="/{contactId}/address",
 				consumes={"application/json"},
 				produces={"application/hal+json"})
 	public ResponseEntity<EntityModel<Address>> updateAddress(
 								@PathVariable final Long contactId,
-								@RequestBody final Address address) throws ResourceNotFoundException, InvalidInputException {
+								@RequestBody final Address address) {
 	    final var methodName = new Object() {}
 	      .getClass()
 	      .getEnclosingMethod()
@@ -505,7 +507,7 @@ public class ContactsController {
 			
 			return ResponseEntity.ok(entityModel);
 		} catch (RuntimeException e) {
-			throw treatException(methodName, e);
+			throw treatRTE(methodName, e);
 		}
 	}
 
@@ -517,14 +519,14 @@ public class ContactsController {
 	 * @param contactId	the contact ID of the owner of phone.
 	 * @param phone	the phone to be updated.
 	 * @return	the response, filled with the entity model of phone.
-	 * @throws ResourceNotFoundException, InvalidInputException 
+	 * @throws	treatRTE.
 	 */
 	@PutMapping(value="/{contactId}/phone",
 				consumes={"application/json"},
 				produces={"application/hal+json"})
 	public ResponseEntity<EntityModel<Phone>> updatePhone(
 								@PathVariable final Long contactId,
-								@RequestBody final Phone phone) throws ResourceNotFoundException, InvalidInputException {
+								@RequestBody final Phone phone) {
 	    final var methodName = new Object() {}
 	      .getClass()
 	      .getEnclosingMethod()
@@ -541,7 +543,7 @@ public class ContactsController {
 
 			return ResponseEntity.ok(entityModel);
 		} catch (RuntimeException e) {
-			throw treatException(methodName, e);
+			throw treatRTE(methodName, e);
 		}
 	}
 	
@@ -552,6 +554,7 @@ public class ContactsController {
 	 * 
 	 * @param contactId	the contact to be deleted.
 	 * @return	the response status.
+	 * @throw	treatRTE.
 	 */
 	@DeleteMapping(value="/{contactId}")
 	public ResponseEntity<Void> deleteContact(@PathVariable final Long contactId) {
@@ -567,7 +570,7 @@ public class ContactsController {
 
 			return ResponseEntity.ok().build();
 		} catch (RuntimeException e) {
-			throw treatException(methodName, e);
+			throw treatRTE(methodName, e);
 		}
 	}
 
@@ -579,6 +582,7 @@ public class ContactsController {
 	 * @param contactId	the contact ID of address owner.
 	 * @param addressId	the address ID to be deleted.
 	 * @return	the response status.
+	 * @throws	treatRTE.
 	 */
 	@DeleteMapping(value="/{contactId}/address/{addressId}")
 	public ResponseEntity<Void> deleteAddress(
@@ -596,7 +600,7 @@ public class ContactsController {
 
 			return ResponseEntity.ok().build();
 		} catch (RuntimeException e) {
-			throw treatException(methodName, e);
+			throw treatRTE(methodName, e);
 		}
 	}
 
@@ -608,6 +612,7 @@ public class ContactsController {
 	 * @param contactId	the contact ID of phone owner.
 	 * @param addressId	the phone ID to be deleted.
 	 * @return	the response status.
+	 * @throws	treatRTE.
 	 */
 	@DeleteMapping(value="/{contactId}/phone/{phoneId}")
 	public ResponseEntity<Void> deletePhone(

@@ -4,14 +4,19 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import br.com.silvio.everis.contacts.dao.AddressDao;
 import br.com.silvio.everis.contacts.dao.ContactDao;
 import br.com.silvio.everis.contacts.dao.PhoneDao;
 import br.com.silvio.everis.contacts.enums.PhoneType;
-import br.com.silvio.everis.contacts.exceptions.InvalidInputException;
-import br.com.silvio.everis.contacts.exceptions.ResourceNotFoundException;
+import br.com.silvio.everis.contacts.exceptions.IdSuppliedForNew;
+import br.com.silvio.everis.contacts.exceptions.Invalid;
+import br.com.silvio.everis.contacts.exceptions.Mandatory;
+import br.com.silvio.everis.contacts.exceptions.RecordNotSupplied;
+import br.com.silvio.everis.contacts.exceptions.ResourceNotFound;
+import br.com.silvio.everis.contacts.exceptions.SuppliedDoesNotBelongTo;
 import br.com.silvio.everis.contacts.model.Address;
 import br.com.silvio.everis.contacts.model.Contact;
 import br.com.silvio.everis.contacts.model.Phone;
@@ -34,29 +39,48 @@ public class ContactServiceImpl implements ContactService {
 	@Autowired
 	PhoneDao phoneDao;
 	
-	static final String msgAddressNotSupplied = "address record was not supplied";
-	static final String msgPhoneNotSupplied = "phone record was not supplied";
+	@Value("${contacts.regex.contact.name}")
+	private String regexContactName;
+	
+	@Value("${contacts.regex.contact.cpf}")
+	private String regexContactCpf;
+	
+	@Value("${contacts.regex.address.zipcode}")
+	private String regexAddressZipCode;
+	
+	@Value("${contacts.regex.phone.fix}")
+	private String regexPhoneFix;
+	
+	@Value("${contacts.regex.phone.mobile}")
+	private String regexPhoneMobile;
+	
+	@Value("${contacts.regex.phone.ddi}")
+	private String regexPhoneDdi;
+	
+	@Value("${contacts.regex.phone.ddd}")
+	private String regexPhoneDdd;
 	
 	/**
 	 * Validates contact record against rules (REGEX).
 	 * 
 	 * @param contact	the contact to be validated.
-	 * @throws	InvalidInputException.
+	 * @throws	Invalid.
+	 * @throws	Mandatory.
 	 */
 	private void validateContact(Contact contact) {
 		var name = contact.getName();
 		var cpf = contact.getCpf();
 		
 		if ((name != null) && (!name.isBlank())) {
-			if (!name.matches("[A-ZÁÉÍÓÚÃÕÂ\\s]{10,}")) {
-				throw new InvalidInputException("contact name is invalid");
+			if (!name.matches(regexContactName)) {
+				throw new Invalid("contact name");
 			}
 		} else {
-			throw new InvalidInputException("contact name is mandatory");
+			throw new Mandatory("contact name");
 		}
 		
-		if ((cpf != null) && (!cpf.matches("[0-9]{11}"))) {
-			throw new InvalidInputException("contact CPF is invalid");
+		if ((cpf != null) && (!cpf.matches(regexContactCpf))) {
+			throw new Invalid("contact CPF");
 		}
 	}
 	
@@ -64,7 +88,8 @@ public class ContactServiceImpl implements ContactService {
 	 * Validates address record against rules (REGEX).
 	 * 
 	 * @param address	the address to be validated.	
-	 * @throws	InvalidInputException.
+	 * @throws	Invalid.
+	 * @throws	Mandatory.
 	 */
 	private void validateAddress(Address address) {
 		var street = address.getStreet();
@@ -72,15 +97,15 @@ public class ContactServiceImpl implements ContactService {
 		var zipCode = address.getZipCode();
 		
 		if ((street == null) || (street.isBlank())) {
-			throw new InvalidInputException("address street is mandatory");
+			throw new Mandatory("address street");
 		}
 		
 		if ((city == null) || (city.isBlank())) {
-			throw new InvalidInputException("address city is mandatory");
+			throw new Mandatory("address city");
 		}
 		
-		if ((zipCode != null) && (!zipCode.matches("\\d{5}-\\d{3}"))) {
-				throw new InvalidInputException("address zip code is invalid");
+		if ((zipCode != null) && (!zipCode.matches(regexAddressZipCode))) {
+				throw new Invalid("address zip code");
 		}
 	}
 	
@@ -88,37 +113,38 @@ public class ContactServiceImpl implements ContactService {
 	 * Validates phone record against rules (REGEX).
 	 * 
 	 * @param phone	the phone to be validated.	
-	 * @throws	InvalidInputException.
+	 * @throws	Invalid.
+	 * @throws	Mandatory.
 	 */
 	private void validatePhone(Phone phone) {
 		var phoneType = phone.getPhoneType();
 		var ddi = phone.getDdi();
 		var ddd = phone.getDdd();
 		var number = phone.getNumber();
-		var phoneRegex = (phoneType == PhoneType.FIX) ? "[2-5]\\d{7}" : "9\\d{8}";
+		var regexPhone = (phoneType == PhoneType.FIX) ? regexPhoneFix : regexPhoneMobile;
 
 		if (ddi == null) {
-			throw new InvalidInputException("phone ddi is mandatory");
+			throw new Mandatory("phone ddi");
 		}
 		
 		if (ddd == null) {
-			throw new InvalidInputException("phone ddd is mandatory");
+			throw new Mandatory("phone ddd");
 		}
 		
 		if (number == null) {
-			throw new InvalidInputException("phone number is mandatory");
+			throw new Mandatory("phone number");
 		}
 		
-		if (!ddi.matches("\\d{1,3}")) {
-			throw new InvalidInputException("phone ddi is invalid");
+		if (!ddi.matches(regexPhoneDdi)) {
+			throw new Invalid("phone ddi");
 		}
 		
-		if (!ddd.matches("\\d{1,2}")) {
-			throw new InvalidInputException("phone ddd is invalid");
+		if (!ddd.matches(regexPhoneDdd)) {
+			throw new Invalid("phone ddd");
 		}
 
-		if (!number.matches(phoneRegex)) {
-			throw new InvalidInputException("phone number is invalid");
+		if (!number.matches(regexPhone)) {
+			throw new Invalid("phone number");
 		}
 	}
 	
@@ -144,7 +170,7 @@ public class ContactServiceImpl implements ContactService {
 		if (contact != null) {
 			return contact.getAddresses();
 		} else {
-			throw new ResourceNotFoundException(Contact.class, contactId);
+			throw new ResourceNotFound(Contact.class, contactId);
 		}
 	}
 
@@ -161,7 +187,7 @@ public class ContactServiceImpl implements ContactService {
 		if (contact != null) {
 			return contact.getPhones();
 		} else {
-			throw new ResourceNotFoundException(Contact.class, contactId);
+			throw new ResourceNotFound(Contact.class, contactId);
 		}
 	}
 
@@ -170,7 +196,7 @@ public class ContactServiceImpl implements ContactService {
 	 * 
 	 * @param contactId	the contact ID.
 	 * @return	the contact.
-	 * @throws	InvalidInputException.
+	 * @throws	Invalid.
 	 */
 	@Override
 	public Contact loadContactById(Long contactId) {
@@ -178,7 +204,7 @@ public class ContactServiceImpl implements ContactService {
 			Optional<Contact> oContact = contactDao.findById(contactId);
 			return oContact.isPresent() ? oContact.get() : null;
 		} else {
-			throw new InvalidInputException("null contact ID");
+			throw new Invalid("null contact ID");
 		}
 	}
 
@@ -187,7 +213,7 @@ public class ContactServiceImpl implements ContactService {
 	 * 
 	 * @param addressId	the address ID.
 	 * @return	the address.
-	 * @throws	InvalidInputException.
+	 * @throws	Invalid.
 	 */
 	@Override
 	public Address loadAddressById(Long addressId) {
@@ -195,7 +221,7 @@ public class ContactServiceImpl implements ContactService {
 			Optional<Address> oAddress = addressDao.findById(addressId);
 			return oAddress.isPresent() ? oAddress.get() : null;
 		} else {
-			throw new InvalidInputException("null address ID");
+			throw new Invalid("null address ID");
 		}
 	}
 
@@ -204,7 +230,7 @@ public class ContactServiceImpl implements ContactService {
 	 * 
 	 * @param phoneId	the phone ID.
 	 * @return	the phone.
-	 * @throws	InvalidInputException.
+	 * @throws	Invalid.
 	 */
 	@Override
 	public Phone loadPhoneById(Long phoneId) {
@@ -212,7 +238,7 @@ public class ContactServiceImpl implements ContactService {
 			Optional<Phone> oPhone = phoneDao.findById(phoneId);
 			return oPhone.isPresent() ? oPhone.get() : null;
 		} else {
-			throw new InvalidInputException("null phone ID");
+			throw new Invalid("null phone ID");
 		}
 	}
 
@@ -221,7 +247,8 @@ public class ContactServiceImpl implements ContactService {
 	 * 
 	 * @param contact	the new contact.
 	 * @return the contact inserted.
-	 * @throws InvalidInputException.
+	 * @throws IdSuppliedForNew.
+	 * @throws RecordNotSupplied.
 	 */
 	@Override
 	public Contact addContact(Contact contact) {
@@ -230,10 +257,10 @@ public class ContactServiceImpl implements ContactService {
 				validateContact(contact);
 				return contactDao.save(contact);
 			} else {
-				throw new InvalidInputException("contact ID must not be supplied for new records");
+				throw new IdSuppliedForNew("contact");
 			}
 		} else {
-			throw new InvalidInputException("contact record was not supplied");
+			throw new RecordNotSupplied("contact");
 		}
 	}
 
@@ -242,7 +269,8 @@ public class ContactServiceImpl implements ContactService {
 	 * 
 	 * @param address	the new address.
 	 * @return	the new address added.
-	 * @throws	InvalidInputException.
+	 * @throws IdSuppliedForNew.
+	 * @throws RecordNotSupplied.
 	 */
 	@Override
 	public Address addAddress(Address address) {
@@ -251,10 +279,10 @@ public class ContactServiceImpl implements ContactService {
 				validateAddress(address);
 				return addressDao.save(address);
 			} else {
-				throw new InvalidInputException("address ID must not be supplied for new records");
+				throw new IdSuppliedForNew("address");
 			}
 		} else {
-			throw new InvalidInputException(msgAddressNotSupplied);
+			throw new RecordNotSupplied("address");
 		}
 	}
 
@@ -263,7 +291,8 @@ public class ContactServiceImpl implements ContactService {
 	 * 
 	 * @param phone	the new phone.
 	 * @return	the new phone added.
-	 * @throws	InvalidInputException.
+	 * @throws IdSuppliedForNew.
+	 * @throws RecordNotSupplied.
 	 */
 	@Override
 	public Phone addPhone(Phone phone) {
@@ -272,10 +301,10 @@ public class ContactServiceImpl implements ContactService {
 				validatePhone(phone);
 				return phoneDao.save(phone);
 			} else {
-				throw new InvalidInputException("phone ID must not be supplied for new records");
+				throw new IdSuppliedForNew("phone");
 			}
 		} else {
-			throw new InvalidInputException(msgPhoneNotSupplied);
+			throw new RecordNotSupplied("phone");
 		}
 	}
 
@@ -284,8 +313,8 @@ public class ContactServiceImpl implements ContactService {
 	 * 
 	 * @param contact	the contact.
 	 * @return	the updated contact.
-	 * @throws	InvalidInputException.
-	 * @throws	ResourceNotFoundException.
+	 * @throws	RecordNotSupplied.
+	 * @throws	ResourceNotFound.
 	 */
 	@Override
 	public Contact updateContact(Contact contact) {
@@ -296,10 +325,10 @@ public class ContactServiceImpl implements ContactService {
 				validateContact(contact);
 				return contactDao.save(contact);
 			} else {
-				throw new ResourceNotFoundException(Contact.class, contact.getId());
+				throw new ResourceNotFound(Contact.class, contact.getId());
 			}
 		} else {
-			throw new InvalidInputException("contact record was not supplied");
+			throw new RecordNotSupplied("contact");
 		}
 	}
 
@@ -308,8 +337,8 @@ public class ContactServiceImpl implements ContactService {
 	 * 
 	 * @param address	the address.
 	 * @return	the updated address.
-	 * @throws	InvalidInputException.
-	 * @throws	ResourceNotFoundException.
+	 * @throws	RecordNotSupplied.
+	 * @throws	ResourceNotFound.
 	 */
 	@Override
 	public Address updateAddress(Address address) {
@@ -320,10 +349,10 @@ public class ContactServiceImpl implements ContactService {
 				validateAddress(address);
 				return addressDao.save(address);
 			} else {
-				throw new ResourceNotFoundException(Address.class, address.getId());
+				throw new ResourceNotFound(Address.class, address.getId());
 			}
 		} else {
-			throw new InvalidInputException(msgAddressNotSupplied);
+			throw new RecordNotSupplied("address");
 		}
 	}
 
@@ -333,8 +362,9 @@ public class ContactServiceImpl implements ContactService {
 	 * @param contactId	the contact ID.
 	 * @param address	the address.
 	 * @return	the updated address.
-	 * @throws	InvalidInputException.
-	 * @throws	ResourceNotFoundException.
+	 * @throws SuppliedDoesNotBelongTo.
+	 * @throws RecordNotSupplied.
+	 * @throws	ResourceNotFound.
 	 */
 	@Override
 	public Address updateAddress(Long contactId, Address address) {
@@ -349,16 +379,16 @@ public class ContactServiceImpl implements ContactService {
 						validateAddress(address);
 						return addressDao.save(address);
 					} else {
-						throw new InvalidInputException("supplied address does not belong to supplied contact ID");
+						throw new SuppliedDoesNotBelongTo("address", "contact ID");
 					}
 				} else {
-					throw new ResourceNotFoundException(Address.class, address.getId());
+					throw new ResourceNotFound(Address.class, address.getId());
 				}
 			} else {
-				throw new ResourceNotFoundException(Contact.class, contactId);
+				throw new ResourceNotFound(Contact.class, contactId);
 			}
 		} else {
-			throw new InvalidInputException(msgAddressNotSupplied);
+			throw new RecordNotSupplied("address");
 		}
 	}
 
@@ -367,8 +397,8 @@ public class ContactServiceImpl implements ContactService {
 	 * 
 	 * @param phone	the phone.
 	 * @return	the updated phone.
-	 * @throws	InvalidInputException.
-	 * @throws	ResourceNotFoundException.
+	 * @throws	RecordNotSupplied.
+	 * @throws	ResourceNotFound.
 	 */
 	@Override
 	public Phone updatePhone(Phone phone) {
@@ -379,10 +409,10 @@ public class ContactServiceImpl implements ContactService {
 				validatePhone(phone);
 				return phoneDao.save(phone);
 			} else {
-				throw new ResourceNotFoundException(Phone.class, phone.getId());
+				throw new ResourceNotFound(Phone.class, phone.getId());
 			}
 		} else {
-			throw new InvalidInputException(msgPhoneNotSupplied);
+			throw new RecordNotSupplied("phone");
 		}
 	}
 
@@ -392,8 +422,9 @@ public class ContactServiceImpl implements ContactService {
 	 * @param contactId	the contact ID.
 	 * @param phone	the phone.
 	 * @return	the updated phone.
-	 * @throws	InvalidInputException.
-	 * @throws	ResourceNotFoundException.
+	 * @throws	RecordNotSupplied.
+	 * @throws	SuppliedDoesNotBelongTo.
+	 * @throws	ResourceNotFound.
 	 */
 	@Override
 	public Phone updatePhone(Long contactId, Phone phone) {
@@ -408,16 +439,16 @@ public class ContactServiceImpl implements ContactService {
 						validatePhone(phone);
 						return phoneDao.save(phone);
 					} else {
-						throw new InvalidInputException("supplied phone does not belong to supplied contact ID");
+						throw new SuppliedDoesNotBelongTo("phone", "contact ID");
 					}
 				} else {
-					throw new ResourceNotFoundException(Phone.class, phone.getId());
+					throw new ResourceNotFound(Phone.class, phone.getId());
 				}
 			} else {
-				throw new ResourceNotFoundException(Contact.class, contactId);
+				throw new ResourceNotFound(Contact.class, contactId);
 			}
 		} else {
-			throw new InvalidInputException(msgPhoneNotSupplied);
+			throw new RecordNotSupplied("phone");
 		}
 	}
 
@@ -426,7 +457,7 @@ public class ContactServiceImpl implements ContactService {
 	 * 
 	 * @param contactId	the contact ID.
 	 * 
-	 * @throws	ResourceNotFoundException.
+	 * @throws	ResourceNotFound.
 	 */
 	@Override
 	public void deleteContact(Long contactId) {
@@ -435,7 +466,7 @@ public class ContactServiceImpl implements ContactService {
 		if (contact != null) {
 			contactDao.deleteById(contactId);
 		} else {
-			throw new ResourceNotFoundException(Contact.class, contactId);
+			throw new ResourceNotFound(Contact.class, contactId);
 		}
 	}
 
@@ -444,7 +475,7 @@ public class ContactServiceImpl implements ContactService {
 	 * 
 	 * @param addressId	the address ID.
 	 * 
-	 * @throws	ResourceNotFoundException.
+	 * @throws	ResourceNotFound.
 	 */
 	@Override
 	public void deleteAddress(Long addressId) {
@@ -453,7 +484,7 @@ public class ContactServiceImpl implements ContactService {
 		if (address != null) {
 			addressDao.deleteById(addressId);
 		} else {
-			throw new ResourceNotFoundException(Address.class, addressId);
+			throw new ResourceNotFound(Address.class, addressId);
 		}
 	}
 
@@ -462,8 +493,8 @@ public class ContactServiceImpl implements ContactService {
 	 *
 	 * @param contactId the contact ID.
 	 * @param addressId	the address ID.
-	 * @throws	ResourceNotFoundException.
-	 * @throws	InvalidInputException.
+	 * @throws	ResourceNotFound.
+	 * @throws	SuppliedDoesNotBelongTo.
 	 */
 	@Override
 	public void deleteAddress(Long contactId, Long addressId) {
@@ -476,13 +507,13 @@ public class ContactServiceImpl implements ContactService {
 				if (address.getContact().getId().equals(contactId)) {
 					addressDao.deleteById(addressId);
 				} else {
-					throw new InvalidInputException("supplied address ID does not belong to supplied contact ID");
+					throw new SuppliedDoesNotBelongTo("address", "contact ID");
 				}
 			} else {
-				throw new ResourceNotFoundException(Address.class, addressId);
+				throw new ResourceNotFound(Address.class, addressId);
 			}
 		} else {
-			throw new ResourceNotFoundException(Contact.class, contactId);
+			throw new ResourceNotFound(Contact.class, contactId);
 		}
 	}
 
@@ -491,7 +522,7 @@ public class ContactServiceImpl implements ContactService {
 	 * 
 	 * @param phoneId	the phone ID.
 	 * 
-	 * @throws	ResourceNotFoundException.
+	 * @throws	ResourceNotFound.
 	 */
 	@Override
 	public void deletePhone(Long phoneId) {
@@ -500,7 +531,7 @@ public class ContactServiceImpl implements ContactService {
 		if (phone != null) {
 			phoneDao.deleteById(phoneId);
 		} else {
-			throw new ResourceNotFoundException(Phone.class, phoneId);
+			throw new ResourceNotFound(Phone.class, phoneId);
 		}
 	}
 
@@ -509,8 +540,8 @@ public class ContactServiceImpl implements ContactService {
 	 *
 	 * @param contactId the contact ID.
 	 * @param phoneId	the phone ID.
-	 * @throws	ResourceNotFoundException.
-	 * @throws	InvalidInputException.
+	 * @throws	ResourceNotFound.
+	 * @throws	SuppliedDoesNotBelongTo.
 	 */
 	@Override
 	public void deletePhone(Long contactId, Long phoneId) {
@@ -523,13 +554,13 @@ public class ContactServiceImpl implements ContactService {
 				if (phone.getContact().getId().equals(phoneId)) {
 					phoneDao.deleteById(phoneId);
 				} else {
-					throw new InvalidInputException("supplied phone ID does not belong to supplied contact ID");
+					throw new SuppliedDoesNotBelongTo("phone", "contact ID");
 				}
 			} else {
-				throw new ResourceNotFoundException(Phone.class, phoneId);
+				throw new ResourceNotFound(Phone.class, phoneId);
 			}
 		} else {
-			throw new ResourceNotFoundException(Contact.class, contactId);
+			throw new ResourceNotFound(Contact.class, contactId);
 		}
 	}
 }
