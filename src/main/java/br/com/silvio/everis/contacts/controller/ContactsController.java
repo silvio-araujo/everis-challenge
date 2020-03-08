@@ -68,8 +68,8 @@ public class ContactsController {
 	 * @param contact	the contact to be filled
 	 */
 	private void fillContactLinks(final Contact contact) {
-		var contactId = contact.getId();
-		Link selfLink = linkTo(ContactsController.class).slash(contactId).withSelfRel();
+		final var contactId = contact.getId();
+		final var selfLink = linkTo(ContactsController.class).slash(contactId).withSelfRel();
 		
 		contact.add(selfLink);
 		
@@ -96,19 +96,13 @@ public class ContactsController {
 	@GetMapping(value="",
 				produces={"application/hal+json"})
 	public ResponseEntity<CollectionModel<Contact>> getContacts() {
-		var methodName = new Object() {}
+		final var methodName = new Object() {}
 	      .getClass()
 	      .getEnclosingMethod()
 	      .getName();
 	      
 		try {
 			var contacts = service.loadContacts();
-			
-//			for (var contact : contacts) {
-//				fillContactLinks(contact);
-//			}
-	
-//			contacts.forEach(contact -> fillContactLinks(contact));
 			
 			contacts.forEach(this::fillContactLinks);
 			
@@ -136,7 +130,7 @@ public class ContactsController {
 				produces={"application/hal+json"})
 	public ResponseEntity<CollectionModel<Address>> getAddressesForContact(
 								@PathVariable final Long contactId) {
-		var methodName = new Object() {}
+		final var methodName = new Object() {}
 	      .getClass()
 	      .getEnclosingMethod()
 	      .getName();
@@ -175,7 +169,7 @@ public class ContactsController {
 				produces={"application/hal+json"})
 	public ResponseEntity<CollectionModel<Phone>> getPhonesForContact(
 							@PathVariable final Long contactId) throws ResourceNotFoundException, InvalidInputException {
-		var methodName = new Object() {}
+		final var methodName = new Object() {}
 	      .getClass()
 	      .getEnclosingMethod()
 	      .getName();
@@ -213,7 +207,7 @@ public class ContactsController {
 				produces={"application/hal+json"})
 	public ResponseEntity<EntityModel<Contact>> getContactById(
 								@PathVariable final Long contactId) throws ResourceNotFoundException, InvalidInputException {
-		var methodName = new Object() {}
+		final var methodName = new Object() {}
 	      .getClass()
 	      .getEnclosingMethod()
 	      .getName();
@@ -255,7 +249,7 @@ public class ContactsController {
 	public ResponseEntity<EntityModel<Address>> getAddressById(
 								@PathVariable final Long contactId,
 								@PathVariable final Long addressId) throws ResourceNotFoundException, InvalidInputException {
-		var methodName = new Object() {}
+		final var methodName = new Object() {}
 	      .getClass()
 	      .getEnclosingMethod()
 	      .getName();
@@ -299,7 +293,7 @@ public class ContactsController {
 	public ResponseEntity<EntityModel<Phone>> getPhoneById(
 								@PathVariable final Long contactId,
 								@PathVariable final Long phoneId) throws ResourceNotFoundException, InvalidInputException {
-	    var methodName = new Object() {}
+	    final var methodName = new Object() {}
 	      .getClass()
 	      .getEnclosingMethod()
 	      .getName();
@@ -337,7 +331,7 @@ public class ContactsController {
 				 produces={"application/hal+json"})
 	public ResponseEntity<EntityModel<Contact>> addContact(
 								@RequestBody final Contact contact) throws ResourceNotFoundException, InvalidInputException {
-	    var methodName = new Object() {}
+	    final var methodName = new Object() {}
 	      .getClass()
 	      .getEnclosingMethod()
 	      .getName();
@@ -373,7 +367,7 @@ public class ContactsController {
 	public ResponseEntity<EntityModel<Address>> addAddress(
 								@PathVariable final Long contactId,
 								@RequestBody final Address address) throws ResourceNotFoundException, InvalidInputException {
-	    var methodName = new Object() {}
+	    final var methodName = new Object() {}
 	      .getClass()
 	      .getEnclosingMethod()
 	      .getName();
@@ -417,7 +411,7 @@ public class ContactsController {
 	public ResponseEntity<EntityModel<Phone>> addPhone(
 								@PathVariable final Long contactId,
 								@RequestBody final Phone phone) throws ResourceNotFoundException, InvalidInputException {
-	    var methodName = new Object() {}
+	    final var methodName = new Object() {}
 	      .getClass()
 	      .getEnclosingMethod()
 	      .getName();
@@ -459,7 +453,7 @@ public class ContactsController {
 				produces={"application/hal+json"})
 	public ResponseEntity<EntityModel<Contact>> updateContact(
 								@RequestBody final Contact contact) throws ResourceNotFoundException, InvalidInputException {
-	    var methodName = new Object() {}
+	    final var methodName = new Object() {}
 	      .getClass()
 	      .getEnclosingMethod()
 	      .getName();
@@ -495,7 +489,7 @@ public class ContactsController {
 	public ResponseEntity<EntityModel<Address>> updateAddress(
 								@PathVariable final Long contactId,
 								@RequestBody final Address address) throws ResourceNotFoundException, InvalidInputException {
-	    var methodName = new Object() {}
+	    final var methodName = new Object() {}
 	      .getClass()
 	      .getEnclosingMethod()
 	      .getName();
@@ -531,7 +525,7 @@ public class ContactsController {
 	public ResponseEntity<EntityModel<Phone>> updatePhone(
 								@PathVariable final Long contactId,
 								@RequestBody final Phone phone) throws ResourceNotFoundException, InvalidInputException {
-	    var methodName = new Object() {}
+	    final var methodName = new Object() {}
 	      .getClass()
 	      .getEnclosingMethod()
 	      .getName();
@@ -561,7 +555,7 @@ public class ContactsController {
 	 */
 	@DeleteMapping(value="/{contactId}")
 	public ResponseEntity<Void> deleteContact(@PathVariable final Long contactId) {
-	    var methodName = new Object() {}
+	    final var methodName = new Object() {}
 	      .getClass()
 	      .getEnclosingMethod()
 	      .getName();
@@ -590,7 +584,7 @@ public class ContactsController {
 	public ResponseEntity<Void> deleteAddress(
 					@PathVariable final Long contactId,
 					@PathVariable final Long addressId) {
-	    var methodName = new Object() {}
+	    final var methodName = new Object() {}
 	      .getClass()
 	      .getEnclosingMethod()
 	      .getName();
@@ -619,7 +613,8 @@ public class ContactsController {
 	public ResponseEntity<Void> deletePhone(
 					@PathVariable final Long contactId,
 					@PathVariable final Long phoneId) {
-	    var methodName = new Object() {}
+	    final var methodName = new Object() {}
+	    	.getClass().getEnclosingMethod()
 	      .getClass()
 	      .getEnclosingMethod()
 	      .getName();
