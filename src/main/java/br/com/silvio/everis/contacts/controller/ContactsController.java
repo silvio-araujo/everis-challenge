@@ -45,7 +45,9 @@ public class ContactsController {
 	 * Treats exceptions, logging message and returning the same exception,
 	 * due to be rethrown.
 	 * 
-	 * @param contact	the contact to be filled
+	 * @param methodName	the name of the method where exception was thrown.
+	 * @param e	the original exception to be treated.
+	 * @return	the same original exception, just to be rethrown.
 	 */
 	private RuntimeException treatRTE(String methodName, RuntimeException e) {
 		logger.error(String.format("%s fails: %s", methodName, e.getMessage()));

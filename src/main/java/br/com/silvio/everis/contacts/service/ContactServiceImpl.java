@@ -162,13 +162,14 @@ public class ContactServiceImpl implements ContactService {
 	 * 
 	 * @param contactId	the contact ID.
 	 * @return	a list of addresses of a given contact
+	 * @throws ResourceNotFound.
 	 */
 	@Override
 	public List<Address> loadContactAddresses(Long contactId) {
 		Contact contact = loadContactById(contactId);
 		
 		if (contact != null) {
-			return contact.getAddresses();
+			return addressDao.findAllByContact(contact);
 		} else {
 			throw new ResourceNotFound(Contact.class, contactId);
 		}
@@ -179,13 +180,14 @@ public class ContactServiceImpl implements ContactService {
 	 * 
 	 * @param contactId	the contact ID.
 	 * @return a list of phones of a given contact.
+	 * @throws ResourceNotFound.
 	 */
 	@Override
 	public List<Phone> loadContactPhones(Long contactId) {
 		Contact contact = loadContactById(contactId);
 		
 		if (contact != null) {
-			return contact.getPhones();
+			return phoneDao.findAllByContact(contact);
 		} else {
 			throw new ResourceNotFound(Contact.class, contactId);
 		}
