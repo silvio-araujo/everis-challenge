@@ -128,7 +128,7 @@ de código, foram recusadas.
 
 ## Banco
 
-O banco utilizado foi o H2. A pasta do banco deve ser criada previamente: "C:\data", e o arquivo de dados terá o nome de "everis_contacts". Essa informação está configurada no application.properties e poderá ser ajustada, caso necessário.
+O banco utilizado foi o H2. A pasta do banco será criada automaticamente em "C:\data", e o arquivo de dados terá o nome de "everis_contacts". Essa informação está configurada no application.properties e poderá ser ajustada, caso necessário.
 
 A intenção era de substituir o H2 pelo MongoDB após o término da implementação das funcionalidades requisitadas,
 porém não houve tempo hábil para isso.
