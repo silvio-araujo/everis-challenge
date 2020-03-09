@@ -74,7 +74,7 @@ Obtém um endereço, dados o ID do seu dono e o próprio ID do endereço
 
 ### URL (GET): http://localhost:8080/contacts/{contactId}/phone/{phoneId}
 
-Obtém um telefon, dados o ID do seu dono e o próprio ID do telefone
+Obtém um telefone, dados o ID do seu dono e o próprio ID do telefone
 
 ### URL (POST): http://localhost:8080/contacts
 
@@ -124,18 +124,23 @@ O Javadoc foi utilizado para todos os pacotes, classes e métodos, conforme soli
 ## Sonarlint
 
 O Sonarlint foi passado, e algumas de suas sugestões foram acatadas e ajustadas, mas não todas. Algumas, por questão de legibilidade
-de código, foram recusadas. Outras, de fato não houve tempo hábil para todos os ajustes serem feitos.
+de código, foram recusadas.
 
 ## Banco
 
-O banco utilizado foi o H2. A intenção era de substituir pelo MongoDB após o término da implementação das funcionalidades requisitadas,
+O banco utilizado foi o H2. A pasta do banco deve ser criada previamente: "C:\data", e o arquivo de dados terá o nome de "everis_contacts". Essa informação está configurada no application.properties e poderá ser ajustada, caso necessário.
+
+A intenção era de substituir o H2 pelo MongoDB após o término da implementação das funcionalidades requisitadas,
 porém não houve tempo hábil para isso.
+
+## Parametrização
+
+Alguns parâmetros foram colocados no application.properties e injetados na aplicação, em especial as strings usadas nos REGEXs.
 
 ## Testes unitários
 
-Não houve tempo hábil para implementá-los.
+Só foram implementados os primeiros testes unitários, sobre os primeiros métodos do serviço. Por uma questão de tempo disponível, não consegui cobrir todo o código.
 
 ## Observações finais
 
-Não conhecia várias das tecnologias aqui solicitadas nesse teste. Só a aplicação do HATEOAS já me tomou bastante tempo de aprendizado e
-aplicação, mas consegui agregar a técnica no pouco tempo disponível.
+Não conhecia várias das tecnologias aqui solicitadas nesse teste. Só a aplicação do HATEOAS (a qual só conhecia de nome, e aprendi no tempo de execução desse desafio) já me tomou bastante tempo de aprendizado e utilização, mas consegui agregar a técnica no pouco tempo disponível.
