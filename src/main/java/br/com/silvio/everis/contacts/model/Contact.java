@@ -167,7 +167,6 @@ public class Contact extends RepresentationModel<Contact> {
 	public String toString() {
 		return "Contact [name=" + name + ", birthdate=" + 
 				String.format("%tF", birthdate) +
-				", cpf=" + cpf + ", addresses=" + addresses
-				+ ", phones=" + phones + "]";
+				", cpf=" + cpf + "]";
 	}
 }

@@ -23,6 +23,7 @@ import br.com.silvio.everis.contacts.model.Contact;
 @TestMethodOrder(OrderAnnotation.class)
 public class ContactServiceImplTest {
 	private static final Logger logger = LoggerFactory.getLogger(ContactServiceImplTest.class);
+	private static final String failNoData = "Não foi possível fazer o teste sem nenhum contato cadastrado!";
 	
 	@Autowired
 	private ContactService service;
@@ -31,6 +32,11 @@ public class ContactServiceImplTest {
 	private ContactDao contactDao;
 	
 	private static List<Contact> contacts;
+
+	private void logAndFail(String msg) {
+		logger.error(msg);
+		fail(msg);
+	}
 	
 	@Test
 	@Order(1)
@@ -70,14 +76,14 @@ public class ContactServiceImplTest {
 				executable.setId(firstContactId);
 				executable.execute();
 			} catch (RuntimeException e) {
-				logger.error("Falha ao carregar os endereços do ID {}: {}", firstContactId, e.getMessage());
-				fail(e.getMessage());
+				logger.error("Falha ao carregar os endereços do ID {}", firstContactId);
+				logAndFail(e.getMessage());
 			}
 			
 			executable.setId(0L);
 			Assertions.assertThrows(ResourceNotFound.class, executable);			
 		} else {
-			logger.warn("Não foi possível fazer o teste sem nenhum contato cadastrado!");
+			logAndFail(failNoData);
 		}
 	}
 
@@ -106,14 +112,14 @@ public class ContactServiceImplTest {
 				executable.setId(firstContactId);
 				executable.execute();
 			} catch (RuntimeException e) {
-				logger.error("Falha ao carregar os telefones do ID {}: {}", firstContactId, e.getMessage());
-				fail(e.getMessage());
+				logger.error("Falha ao carregar os telefones do ID {}", firstContactId);
+				logAndFail(e.getMessage());
 			}
 			
 			executable.setId(0L);
 			Assertions.assertThrows(ResourceNotFound.class, executable);			
 		} else {
-			logger.warn("Não foi possível fazer o teste sem nenhum contato cadastrado!");
+			logAndFail(failNoData);
 		}
 	}
 
@@ -151,8 +157,8 @@ public class ContactServiceImplTest {
 				executable.setId(firstContactId);
 				executable.execute();
 			} catch (RuntimeException e) {
-				logger.error("Falha ao carregar o contato de ID {}: {}", firstContactId, e.getMessage());
-				fail(e.getMessage());
+				logger.error("Falha ao carregar o contato de ID {}", firstContactId);
+				logAndFail(e.getMessage());
 			}
 			Assertions.assertNotNull(executable.getContact());
 			
@@ -160,15 +166,74 @@ public class ContactServiceImplTest {
 				executable.setId(0L);
 				executable.execute();
 			} catch (RuntimeException e) {
-				logger.error("Falha ao carregar o contato de ID {}: {}", firstContactId, e.getMessage());
-				fail(e.getMessage());
+				logger.error("Falha ao carregar o contato de ID {}", firstContactId);
+				logAndFail(e.getMessage());
 			}
 			Assertions.assertNull(executable.getContact());
 
 			executable.setId(null);
 			Assertions.assertThrows(Invalid.class, executable);			
 		} else {
-			logger.warn("Não foi possível fazer o teste sem nenhum contato cadastrado!");
+			fail(failNoData);
+		}
+	}
+
+	@Test
+	public void testAddContact() {
+		logger.info("*** Teste de carga de adição de contatos ***");
+
+		var executable = new Executable() {
+			private Contact contactIn;
+			private Contact contactOut;
+			
+			@Override
+			public void execute() {
+				this.contactOut = service.addContact(contactIn);
+			}
+			
+			public void setContact(Contact contact) {
+				this.contactIn = contact;
+			}
+			
+			public Contact getContact() {
+				return contactOut;
+			}
+		};
+		
+		try {
+			executable.setContact(null);
+			Assertions.assertThrows(RecordNotSupplied.class, executable, "Aceitando inclusão sem registro fornecido");
+			
+			Contact contact = new Contact();
+			executable.setContact(contact);
+			
+			Assertions.assertThrows(Mandatory.class, executable, "Aceitando inclusão com nome nulo");
+			
+			contact.setId(5L);
+			Assertions.assertThrows(IdSuppliedForNew.class, executable, "Aceitando inclusão com ID definido no registro");
+			
+			contact.setId(null);
+			contact.setName("ABCDEF");
+			Assertions.assertThrows(Invalid.class, executable, "Aceitando inclusão com nome curto");
+			
+			contact.setName("ABCDEFGHIJ");
+			executable.execute();
+			Contact writtenContact = executable.getContact();
+			
+			Assertions.assertNotNull(writtenContact, "Inclusão de registro correto foi recusada");
+			Assertions.assertNotNull(writtenContact.getId(), "Inclusão de registro correto não retornou o ID no novo registro");
+			
+			contact.setId(null);
+			contact.setCpf("123");
+			Assertions.assertThrows(Invalid.class, executable, "Inclusão de registro com CPF curto foi aceita");
+			
+			contact.setCpf("1234567890A");
+			Assertions.assertThrows(Invalid.class, executable, "Inclusão de registro com CPF alfanumérico foi aceita");
+			
+			contact.setCpf("12345678901");
+			executable.execute();
+		} catch (RuntimeException e) {
+			logAndFail(e.getMessage());
 		}
 	}
 }
